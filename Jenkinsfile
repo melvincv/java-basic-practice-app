@@ -17,6 +17,12 @@ pipeline {
             }
         }
 
+        stage('Build') {
+            steps {
+                sh "mvn clean package"
+            }
+        }
+        
         stage("Code Quality"){
             when {
                 expression { params.skip_test != true }
@@ -36,12 +42,6 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            steps {
-                sh "mvn clean package"
-            }
-        }
-        
         stage('Test') {
             steps {
                 sh "mvn test"
