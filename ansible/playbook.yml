@@ -1,0 +1,53 @@
+---
+- name: Deploy Tomcat 9 on Target SVR
+  hosts: web
+  become: yes
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install Java
+      apt:
+        name: openjdk-17-jdk-headless
+        state: present
+
+    - name: Install Tomcat 9
+      apt:
+        name: tomcat9
+        state: present
+
+    - name: Copy service file to user editable location
+      copy:
+        src: /lib/systemd/system/tomcat9.service
+        dest: /etc/systemd/system/tomcat9.service
+        remote_src: yes
+
+    - name: Set JAVA_HOME env var in systemd unit file
+      lineinfile:
+        path: /etc/systemd/system/tomcat9.service
+        state: present
+        insertafter: '^# Configuration'
+        line: Environment="JAVA_HOME=/usr/lib/jvm/java-1.17.0-openjdk-amd64"
+
+    - name: Restart Tomcat 9
+      systemd:
+        name: tomcat9
+        enabled: yes
+        state: restarted
+        daemon_reload: yes
+
+- name: Deploy Application (WAR file)
+  hosts: web
+  become: yes
+  tasks:
+    - name: Delete the ROOT folder in Tomcat 9
+      file:
+        path: /var/lib/tomcat9/webapps/ROOT
+        state: absent
+
+    - name: Copy the WAR file to Tomcat 9
+      copy:
+        src: target/java-basic-practice-app-*.war
+        dest: /var/lib/tomcat9/webapps/ROOT.war
+        remote_src: yes
