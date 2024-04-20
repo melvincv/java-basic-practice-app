@@ -4,7 +4,7 @@ pipeline {
     parameters {
         booleanParam(name: 'skip_test', defaultValue: false, description: 'Skip Sonarqube Analysis?')
         string(name: 'EC2_HOSTA', description: 'Server A IP', defaultValue: '54.199.149.31')
-        string(name: 'EC2_HOSTB', description: 'Server B IP', defaultValue: '18.183.213.61')
+        string(name: 'EC2_HOSTB', description: 'Server B IP', defaultValue: '43.206.158.1')
         booleanParam(name: 'SERVER_A', defaultValue: true, description: 'Deploy to Server A?')
         booleanParam(name: 'SERVER_B', defaultValue: true, description: 'Deploy to Server B?')
     }
