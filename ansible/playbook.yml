@@ -36,18 +36,3 @@
         enabled: yes
         state: restarted
         daemon_reload: yes
-
-- name: Deploy Application (WAR file)
-  hosts: web
-  become: yes
-  tasks:
-    - name: Delete the ROOT folder in Tomcat 9
-      file:
-        path: /var/lib/tomcat9/webapps/ROOT
-        state: absent
-
-    - name: Copy the WAR file to Tomcat 9
-      copy:
-        src: target/java-basic-practice-app-*.war
-        dest: /var/lib/tomcat9/webapps/ROOT.war
-        remote_src: yes
