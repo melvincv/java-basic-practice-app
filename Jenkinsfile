@@ -62,7 +62,7 @@ pipeline {
                     sh '''
                         [ -d ~/.ssh ] || mkdir ~/.ssh && chmod 0700 ~/.ssh
                         ssh-keyscan -t rsa,dsa ${EC2_HOSTA} >> ~/.ssh/known_hosts
-                        scp *.war ubuntu@${EC2_HOSTA}:/var/lib/tomcat9/webapps/ROOT.war
+                        scp target/*.war ubuntu@${EC2_HOSTA}:/var/lib/tomcat9/webapps/ROOT.war
                     '''
                 }
             }
@@ -78,7 +78,7 @@ pipeline {
                     sh '''
                         [ -d ~/.ssh ] || mkdir ~/.ssh && chmod 0700 ~/.ssh
                         ssh-keyscan -t rsa,dsa ${EC2_HOSTB} >> ~/.ssh/known_hosts
-                        scp *.war ubuntu@${EC2_HOSTB}:/var/lib/tomcat9/webapps/ROOT.war
+                        scp target/*.war ubuntu@${EC2_HOSTB}:/var/lib/tomcat9/webapps/ROOT.war
                     '''
                 }
             }
