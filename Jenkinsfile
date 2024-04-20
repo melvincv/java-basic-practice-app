@@ -62,7 +62,8 @@ pipeline {
                     sh '''
                         [ -d ~/.ssh ] || mkdir ~/.ssh && chmod 0700 ~/.ssh
                         ssh-keyscan -t rsa,dsa ${EC2_HOSTA} >> ~/.ssh/known_hosts
-                        scp target/*.war ubuntu@${EC2_HOSTA}:/var/lib/tomcat9/webapps/ROOT.war
+                        scp target/*.war ubuntu@${EC2_HOSTA}:/tmp/ROOT.war
+                        ssh ubuntu@${EC2_HOSTA} 'sudo mv -v /tmp/ROOT.war /var/lib/tomcat9/webapps/ROOT.war
                     '''
                 }
             }
