@@ -14,7 +14,7 @@ public class HelloController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String welcome(ModelMap model) {
 
-        model.addAttribute("message", "Spring MVC Hello World");
+        model.addAttribute("message", "Deployed by Melvin C V");
 
         // view name, map to welcome.html later
         return "welcome";
