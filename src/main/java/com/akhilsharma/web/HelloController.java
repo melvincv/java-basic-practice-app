@@ -14,7 +14,7 @@ public class HelloController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String welcome(ModelMap model) {
 
-        model.addAttribute("message", "Deployed by Melvin C V");
+        model.addAttribute("message", "Mentored by Akhil Sharma");
 
         // view name, map to welcome.html later
         return "welcome";
