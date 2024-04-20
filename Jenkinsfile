@@ -61,7 +61,7 @@ pipeline {
                     // Use scp to transfer the WAR file(s)
                     sh '''
                         [ -d ~/.ssh ] || mkdir ~/.ssh && chmod 0700 ~/.ssh
-                        ssh-keyscan -t rsa,dsa ${SERVER_A} >> ~/.ssh/known_hosts
+                        ssh-keyscan -t rsa,dsa ${EC2_HOSTA} >> ~/.ssh/known_hosts
                         scp *.war ubuntu@${EC2_HOSTA}:/var/lib/tomcat9/webapps/ROOT.war
                     '''
                 }
@@ -77,7 +77,7 @@ pipeline {
                     // Use scp to transfer the WAR file(s)
                     sh '''
                         [ -d ~/.ssh ] || mkdir ~/.ssh && chmod 0700 ~/.ssh
-                        ssh-keyscan -t rsa,dsa ${SERVER_B} >> ~/.ssh/known_hosts
+                        ssh-keyscan -t rsa,dsa ${EC2_HOSTB} >> ~/.ssh/known_hosts
                         scp *.war ubuntu@${EC2_HOSTB}:/var/lib/tomcat9/webapps/ROOT.war
                     '''
                 }
