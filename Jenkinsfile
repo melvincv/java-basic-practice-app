@@ -57,9 +57,13 @@ pipeline {
                 expression { params.SERVER_A == true }
             }
             steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'akhil-p1-ssh-key', keyFileVariable: 'EC2_KEY_PATH')]) {
+                sshagent(credentials: ['akhil-p1-ssh-key']) {
                     // Use scp to transfer the WAR file(s)
-                    sh "scp -i ${EC2_KEY_PATH} *.war ubuntu@${EC2_HOSTA}:/var/lib/tomcat9/webapps/ROOT.war"
+                    sh '''
+                        [ -d ~/.ssh ] || mkdir ~/.ssh && chmod 0700 ~/.ssh
+                        ssh-keyscan -t rsa,dsa ${SERVER_A} >> ~/.ssh/known_hosts
+                        scp *.war ubuntu@${EC2_HOSTA}:/var/lib/tomcat9/webapps/ROOT.war
+                    '''
                 }
             }
         }
@@ -69,9 +73,13 @@ pipeline {
                 expression { params.SERVER_B == true }
             }
             steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'akhil-p1-ssh-key', keyFileVariable: 'EC2_KEY_PATH')]) {
+                sshagent(credentials: ['akhil-p1-ssh-key']) {
                     // Use scp to transfer the WAR file(s)
-                    sh "scp -i ${EC2_KEY_PATH} *.war ubuntu@${EC2_HOSTB}:/var/lib/tomcat9/webapps/ROOT.war"
+                    sh '''
+                        [ -d ~/.ssh ] || mkdir ~/.ssh && chmod 0700 ~/.ssh
+                        ssh-keyscan -t rsa,dsa ${SERVER_B} >> ~/.ssh/known_hosts
+                        scp *.war ubuntu@${EC2_HOSTB}:/var/lib/tomcat9/webapps/ROOT.war
+                    '''
                 }
             }
         }
