@@ -58,11 +58,11 @@ pipeline {
             }
             steps {
                 sshagent(credentials: ['akhil-p1-ssh-key']) {
-                    // Use scp to transfer the WAR file(s)
                     sh '''
                         [ -d ~/.ssh ] || mkdir ~/.ssh && chmod 0700 ~/.ssh
                         ssh-keyscan -t rsa,dsa ${EC2_HOSTA} >> ~/.ssh/known_hosts
                         scp target/*.war ubuntu@${EC2_HOSTA}:/tmp/ROOT.war
+                        ssh ubuntu@${EC2_HOSTA} 'sudo rm -rf /var/lib/tomcat9/webapps/ROOT'
                         ssh ubuntu@${EC2_HOSTA} 'sudo mv -v /tmp/ROOT.war /var/lib/tomcat9/webapps/ROOT.war'
                     '''
                 }
@@ -75,11 +75,11 @@ pipeline {
             }
             steps {
                 sshagent(credentials: ['akhil-p1-ssh-key']) {
-                    // Use scp to transfer the WAR file(s)
                     sh '''
                         [ -d ~/.ssh ] || mkdir ~/.ssh && chmod 0700 ~/.ssh
                         ssh-keyscan -t rsa,dsa ${EC2_HOSTB} >> ~/.ssh/known_hosts
                         scp target/*.war ubuntu@${EC2_HOSTB}:/tmp/ROOT.war
+                        ssh ubuntu@${EC2_HOSTB} 'sudo rm -rf /var/lib/tomcat9/webapps/ROOT'
                         ssh ubuntu@${EC2_HOSTB} 'sudo mv -v /tmp/ROOT.war /var/lib/tomcat9/webapps/ROOT.war'
                     '''
                 }
