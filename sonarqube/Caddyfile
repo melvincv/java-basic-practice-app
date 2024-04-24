@@ -1,0 +1,7 @@
+{
+    email "xxxxxx@example.com"
+}
+
+sonar.aws.melvincv.com {
+	reverse_proxy localhost:9000
+}
