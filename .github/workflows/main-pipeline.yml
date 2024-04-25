@@ -3,7 +3,8 @@ name: Java CI with Maven
 on:
   workflow_dispatch:
   push:
-    branches: [ "main-v2" ]
+    branches: 
+      - main-v2
 
 jobs:
   build:
@@ -84,8 +85,7 @@ jobs:
         path: target
         
     - name: Rename WAR File
-      run: |
-        mv -v target/*.war ROOT.war
+      run: mv -v target/*.war ROOT.war
 
     - name: copy WAR file to Tomcat Webapps folder
       uses: appleboy/scp-action@v0.1.7
@@ -119,7 +119,7 @@ jobs:
         path: target
       
     - name: Rename WAR File
-      run: mv -v target/*.war target/ROOT.war
+      run: mv -v target/*.war ROOT.war
 
     - name: copy WAR file to Tomcat Webapps folder
       uses: appleboy/scp-action@v0.1.7
@@ -127,6 +127,16 @@ jobs:
         host: ${{ vars.HOST_B }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.PRIVATE_KEY }}
-        source: "target/ROOT.war"
-        target: "/var/lib/tomcat9/webapps"
+        source: "ROOT.war"
+        target: "/tmp"
+
+    - name: Copy ROOT.war to tomcat webapps folder
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ vars.HOST_B }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.PRIVATE_KEY }}
+        script: |
+          sudo rm -rf /var/lib/tomcat9/webapps/ROOT
+          sudo cp -av /tmp/ROOT.war /var/lib/tomcat9/webapps/
 
