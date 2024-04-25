@@ -96,6 +96,15 @@ jobs:
         source: "ROOT.war"
         target: "/tmp"
 
+    - name: Copy ROOT.war to tomcat webapps folder
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ vars.HOST_A }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.PRIVATE_KEY }}
+        script: |
+          sudo rm -rf /var/lib/tomcat9/webapps/ROOT
+          sudo cp -av /tmp/ROOT.war /var/lib/tomcat9/webapps/
 
   deploy-B:
     if: false
