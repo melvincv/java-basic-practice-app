@@ -59,7 +59,7 @@ jobs:
       run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Java-Practice-App-v2
         
   test:
-    needs: ['code-quality', 'build']
+    needs: ['build']
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
