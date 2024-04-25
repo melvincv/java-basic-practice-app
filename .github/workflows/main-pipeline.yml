@@ -86,15 +86,14 @@ jobs:
     - name: Rename WAR File
       run: |
         mv -v target/*.war ROOT.war
-        ls -R target
 
     - name: copy WAR file to Tomcat Webapps folder
       uses: appleboy/scp-action@v0.1.7
       with:
-        host: ${{ vars.HOST_B }}
+        host: ${{ vars.HOST_A }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.PRIVATE_KEY }}
-        source: "target/ROOT.war"
+        source: "ROOT.war"
         target: "/tmp"
 
 
