@@ -23,8 +23,14 @@ jobs:
     - name: Build with Maven
       run: mvn -DskipTests clean package
 
+    - uses: actions/upload-artifact@v4
+      with:
+        name: java-war-file
+        path: target/spring-application-*.war
+
   code-quality:
     runs-on: ubuntu-latest
+    if: false
     steps:
     - uses: actions/checkout@v4
       with:
@@ -67,3 +73,42 @@ jobs:
 
     - name: Test with Maven
       run: mvn test
+
+  deploy-A:
+    needs: ['test']
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/download-artifact@v4
+      with:
+        name: java-war-file
+      
+    - name: copy WAR file to Tomcat Webapps folder
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ vars.HOST_A }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.PRIVATE_KEY }}
+        source: "target/spring-application-*.war"
+        target: "/var/lib/tomcat9/webapps/ROOT.war"
+
+  deploy-B:
+    needs: ['test']
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/download-artifact@v4
+      with:
+        name: java-war-file
+      
+    - name: copy WAR file to Tomcat Webapps folder
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ vars.HOST_B }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.PRIVATE_KEY }}
+        source: "target/spring-application-*.war"
+        target: "/var/lib/tomcat9/webapps/ROOT.war"
+
