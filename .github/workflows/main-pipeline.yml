@@ -91,7 +91,7 @@ jobs:
     - name: Prepare for SSH Commands
       run: |
         eval $(ssh-agent -s)
-        echo "${{ secrets.PRIVATE_KEY }}" | tr -d '\r' | ssh-add - > /dev/null
+        echo ${{ secrets.PRIVATE_KEY }} | ssh-add -
         mkdir -p ~/.ssh && chmod 700 ~/.ssh
         ssh-keyscan "${{ vars.HOST_A }}" >> ~/.ssh/known_hosts && chmod 644 ~/.ssh/known_hosts
        
