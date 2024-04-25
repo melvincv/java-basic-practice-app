@@ -82,17 +82,18 @@ jobs:
       with:
         name: java-war-file
         path: target
-
-    - name: copy WAR file to Tomcat Webapps folder
-      uses: appleboy/scp-action@v0.1.7
-      with:
-        host: ${{ vars.HOST_A }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.PRIVATE_KEY }}
-        source: "target/spring-application-*.war"
-        target: "/var/lib/tomcat9/webapps/ROOT.war"
+        
+    - name: Manual Deployment using OpenSSH
+      run: |
+        eval $(ssh-agent -s)
+        echo "${{ secrets.PRIVATE_KEY }}" | tr -d '\r' | ssh-add - > /dev/null
+        mkdir -p ~/.ssh && chmod 700 ~/.ssh
+        ssh-keyscan "${{ vars.HOST_A }}" >> ~/.ssh/known_hosts && chmod 644 ~/.ssh/known_hosts
+        ssh ${{ secrets.USERNAME }}@${{ vars.HOST_A }} "sudo rm -rf /var/lib/tomcat9/webapps/ROOT"
+        ssh ${{ secrets.USERNAME }}@${{ vars.HOST_A }} "scp target/*.war /var/lib/tomcat9/webapps/"
 
   deploy-B:
+    if: false
     needs: ['test']
     runs-on: ubuntu-latest
     steps:
@@ -110,5 +111,5 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.PRIVATE_KEY }}
         source: "target/spring-application-*.war"
-        target: "/var/lib/tomcat9/webapps/ROOT.war"
+        target: "/var/lib/tomcat9/webapps"
 
