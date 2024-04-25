@@ -87,19 +87,16 @@ jobs:
       run: |
         mv -v target/*.war ROOT.war
         ls -R target
-  
-    - name: Prepare for SSH Commands
-      run: |
-        eval $(ssh-agent -s)
-        echo ${{ secrets.PRIVATE_KEY }} | ssh-add -
-        mkdir -p ~/.ssh && chmod 700 ~/.ssh
-        ssh-keyscan "${{ vars.HOST_A }}" >> ~/.ssh/known_hosts && chmod 644 ~/.ssh/known_hosts
-       
-    - name: Copy WAR file to Tomcat Webapps folder
-      run: |
-        ssh ${{ secrets.USERNAME }}@${{ vars.HOST_A }} "sudo rm -rf /var/lib/tomcat9/webapps/ROOT"
-        scp ROOT.war ${{ secrets.USERNAME }}@${{ vars.HOST_A }}:/tmp
-        ssh ${{ secrets.USERNAME }}@${{ vars.HOST_A }} "sudo mv -v /tmp/ROOT.war /var/lib/tomcat9/webapps/ROOT.war"
+
+    - name: copy WAR file to Tomcat Webapps folder
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ vars.HOST_B }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.PRIVATE_KEY }}
+        source: "target/ROOT.war"
+        target: "/tmp"
+
 
   deploy-B:
     if: false
