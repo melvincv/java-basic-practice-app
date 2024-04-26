@@ -29,7 +29,6 @@ jobs:
 
   code-quality:
     runs-on: ubuntu-latest
-    if: false
     steps:
     - uses: actions/checkout@v4
       with:
@@ -58,7 +57,7 @@ jobs:
       run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Java-Practice-App-v2
         
   test:
-    needs: ['build']
+    needs: ['build', 'code-quality']
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
