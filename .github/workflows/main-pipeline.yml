@@ -88,7 +88,7 @@ jobs:
       run: mvn test
 
   deploy-A:
-    if: github.ref == 'refs/heads/main-v2' && ${{ inputs.deploy-a }}
+    if: github.ref == 'refs/heads/main-v2' && inputs.deploy-a
     environment: 
       name: production
       url: https://javaappv2.aws.melvincv.com
@@ -125,7 +125,7 @@ jobs:
           sudo cp -av /tmp/ROOT.war /var/lib/tomcat9/webapps/
 
   deploy-B:
-    if: github.ref == 'refs/heads/main-v2' && ${{ inputs.deploy-b }}
+    if: github.ref == 'refs/heads/main-v2' && inputs.deploy-b
     environment: 
       name: production
       url: https://javaappv2.aws.melvincv.com
