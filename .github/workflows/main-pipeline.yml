@@ -5,6 +5,9 @@ on:
   push:
     branches: 
       - main-v2
+  pull_request: 
+    branches: 
+      - main-v2
 
 jobs:
   build:
@@ -73,6 +76,7 @@ jobs:
       run: mvn test
 
   deploy-A:
+    if: github.ref == 'refs/heads/main-v2'
     environment: 
       name: production
       url: https://javaappv2.aws.melvincv.com
@@ -109,6 +113,7 @@ jobs:
           sudo cp -av /tmp/ROOT.war /var/lib/tomcat9/webapps/
 
   deploy-B:
+    if: github.ref == 'refs/heads/main-v2'
     environment: 
       name: production
       url: https://javaappv2.aws.melvincv.com
