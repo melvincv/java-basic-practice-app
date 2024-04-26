@@ -74,6 +74,9 @@ jobs:
       run: mvn test
 
   deploy-A:
+    environment: 
+      name: production
+      url: https://javaappv2.aws.melvincv.com
     needs: ['test']
     runs-on: ubuntu-latest
     steps:
@@ -107,6 +110,9 @@ jobs:
           sudo cp -av /tmp/ROOT.war /var/lib/tomcat9/webapps/
 
   deploy-B:
+    environment: 
+      name: production
+      url: https://javaappv2.aws.melvincv.com
     needs: ['test']
     runs-on: ubuntu-latest
     steps:
