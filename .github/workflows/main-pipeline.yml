@@ -5,6 +5,9 @@ on:
   push:
     branches: 
       - main-v2
+  pull_request: 
+    branches: 
+      - main-v2
 
 jobs:
   build:
@@ -29,7 +32,6 @@ jobs:
 
   code-quality:
     runs-on: ubuntu-latest
-    if: false
     steps:
     - uses: actions/checkout@v4
       with:
@@ -58,7 +60,7 @@ jobs:
       run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Java-Practice-App-v2
         
   test:
-    needs: ['build']
+    needs: ['build', 'code-quality']
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -74,6 +76,7 @@ jobs:
       run: mvn test
 
   deploy-A:
+    if: github.ref == 'refs/heads/main-v2'
     environment: 
       name: production
       url: https://javaappv2.aws.melvincv.com
@@ -110,6 +113,7 @@ jobs:
           sudo cp -av /tmp/ROOT.war /var/lib/tomcat9/webapps/
 
   deploy-B:
+    if: github.ref == 'refs/heads/main-v2'
     environment: 
       name: production
       url: https://javaappv2.aws.melvincv.com
