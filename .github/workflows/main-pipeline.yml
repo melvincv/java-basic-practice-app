@@ -2,12 +2,24 @@ name: Java CI with Maven
 
 on:
   workflow_dispatch:
-  push:
-    branches: 
-      - main-v2
-  pull_request: 
-    branches: 
-      - main-v2
+    inputs:
+      deploy-a:
+        type: boolean
+        description: 'Deploy to Server A?'
+        required: true
+        default: true
+      deploy-b:
+        type: boolean
+        description: 'Deploy to Server B?'
+        required: true
+        default: true
+        
+  # push:
+  #   branches: 
+  #     - main-v2
+  # pull_request: 
+  #   branches: 
+  #     - main-v2
 
 jobs:
   build:
@@ -76,7 +88,7 @@ jobs:
       run: mvn test
 
   deploy-A:
-    if: github.ref == 'refs/heads/main-v2'
+    if: github.ref == 'refs/heads/main-v2' && ${{ inputs.deploy-a }}
     environment: 
       name: production
       url: https://javaappv2.aws.melvincv.com
@@ -113,7 +125,7 @@ jobs:
           sudo cp -av /tmp/ROOT.war /var/lib/tomcat9/webapps/
 
   deploy-B:
-    if: github.ref == 'refs/heads/main-v2'
+    if: github.ref == 'refs/heads/main-v2' && ${{ inputs.deploy-b }}
     environment: 
       name: production
       url: https://javaappv2.aws.melvincv.com
